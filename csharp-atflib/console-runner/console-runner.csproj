@@ -2,9 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <RootNamespace>Org.OpenOrbit.Libraries.AtfLib</RootNamespace>
+        <RootNamespace>console_runner</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\csharp-atflib\csharp-atflib.csproj" />
+    </ItemGroup>
 </Project>
