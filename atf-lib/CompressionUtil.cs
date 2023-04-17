@@ -16,16 +16,10 @@ public static class CompressionUtil
         }
 
         // APPEND UNCOMPRESSED SIZE INFO (ALL FF BECAUSE THE SIZE IS UNKNOWN)
-        for (var i = 0; i < 8; i++)
-        {
-            fixedLzma[5 + i] = 0xFF;
-        }
+        for (var i = 0; i < 8; i++) fixedLzma[5 + i] = 0xFF;
 
         // APPEND BODY
-        for (var i = 5; i < buffer.Count; i++)
-        {
-            fixedLzma[i + 8] = buffer[i];
-        }
+        for (var i = 5; i < buffer.Count; i++) fixedLzma[i + 8] = buffer[i];
 
         // APPEND EOS TOKEN
 
@@ -35,21 +29,21 @@ public static class CompressionUtil
         fixedLzma[fixedLzma.Length - 4] = 0xFF;
         return fixedLzma;
     }
-    
+
     public static byte[] DecompressLzma(IReadOnlyList<byte> buffer)
     {
         var fixedLzma = FixLzmaBytes(buffer);
-        
+
         var settings = DecoderSettings.ReadFrom(fixedLzma, 0);
 
         var decoder = new Decoder(settings);
 
         decoder.Decode(fixedLzma, 13, fixedLzma.Length - 13, 0xFFFFFFF, true);
-        
+
         var outputBytes = new byte[decoder.AvailableOutputLength];
 
         decoder.ReadOutputData(outputBytes, 0, decoder.AvailableOutputLength);
-        
+
         return outputBytes;
     }
 }

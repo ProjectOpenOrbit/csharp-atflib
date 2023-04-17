@@ -1,6 +1,5 @@
 ﻿using Org.OpenOrbit.Libraries.Atf;
 
-
 internal class Program
 {
     private static void Main(string[] args)

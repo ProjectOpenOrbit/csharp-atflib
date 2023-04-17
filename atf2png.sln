@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "atf-lib", "atf-lib\atf-lib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner", "Runner\Runner.csproj", "{EBBD3E67-495A-4778-9B64-BB530A9E71DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jpeg-xr", "jpeg-xr\jpeg-xr.csproj", "{4EC77689-0628-41E1-BA4C-F1473E05F2DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EBBD3E67-495A-4778-9B64-BB530A9E71DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBBD3E67-495A-4778-9B64-BB530A9E71DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBBD3E67-495A-4778-9B64-BB530A9E71DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EC77689-0628-41E1-BA4C-F1473E05F2DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EC77689-0628-41E1-BA4C-F1473E05F2DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EC77689-0628-41E1-BA4C-F1473E05F2DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EC77689-0628-41E1-BA4C-F1473E05F2DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

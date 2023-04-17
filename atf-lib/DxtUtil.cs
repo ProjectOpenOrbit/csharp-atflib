@@ -73,26 +73,26 @@ internal static class DxtUtil
         var dxt1Stream = new BinaryReader(new MemoryStream(dxt1Data));
         var dxt1ImageStream = new BinaryReader(new MemoryStream(dxt1ImageData));
         var imageData = new byte[width * height * 4];
-        
+
         var blockCountX = (width + 3) / 4;
         var blockCountY = (height + 3) / 4;
 
         for (var y = 0; y < blockCountY; y++)
         for (var x = 0; x < blockCountX; x++)
             DecompressDxt1BlockSep(x, y, width, height, dxt1Stream, dxt1ImageStream, imageData);
-        
+
         dxt1Stream.Close();
         dxt1ImageStream.Close();
         return imageData;
     }
-    
+
     private static void DecompressDxt1BlockSep(int x, int y, int width, int height, BinaryReader dxt1Data,
         BinaryReader dxt1ImageData, byte[] imageData)
     {
         var c0 = dxt1ImageData.ReadUInt16();
         var c1 = dxt1ImageData.ReadUInt16();
         var lookupTable = dxt1Data.ReadUInt32();
-        
+
         DecompressDxt1BlockImpl(c0, c1, lookupTable, x, y, width, height, imageData);
     }
 
@@ -116,72 +116,70 @@ internal static class DxtUtil
         ConvertRgb565ToRgb888(c1, out r1, out g1, out b1);
 
         for (var blockY = 0; blockY < 4; blockY++)
+        for (var blockX = 0; blockX < 4; blockX++)
         {
-            for (var blockX = 0; blockX < 4; blockX++)
-            {
-                byte r = 0, g = 0, b = 0, a = 255;
-                var index = (lookupTable >> (2 * (4 * blockY + blockX))) & 0x03;
+            byte r = 0, g = 0, b = 0, a = 255;
+            var index = (lookupTable >> (2 * (4 * blockY + blockX))) & 0x03;
 
-                if (c0 > c1)
-                    switch (index)
-                    {
-                        case 0:
-                            r = r0;
-                            g = g0;
-                            b = b0;
-                            break;
-                        case 1:
-                            r = r1;
-                            g = g1;
-                            b = b1;
-                            break;
-                        case 2:
-                            r = (byte)((2 * r0 + r1) / 3);
-                            g = (byte)((2 * g0 + g1) / 3);
-                            b = (byte)((2 * b0 + b1) / 3);
-                            break;
-                        case 3:
-                            r = (byte)((r0 + 2 * r1) / 3);
-                            g = (byte)((g0 + 2 * g1) / 3);
-                            b = (byte)((b0 + 2 * b1) / 3);
-                            break;
-                    }
-                else
-                    switch (index)
-                    {
-                        case 0:
-                            r = r0;
-                            g = g0;
-                            b = b0;
-                            break;
-                        case 1:
-                            r = r1;
-                            g = g1;
-                            b = b1;
-                            break;
-                        case 2:
-                            r = (byte)((r0 + r1) / 2);
-                            g = (byte)((g0 + g1) / 2);
-                            b = (byte)((b0 + b1) / 2);
-                            break;
-                        case 3:
-                            r = 0;
-                            g = 0;
-                            b = 0;
-                            a = 0;
-                            break;
-                    }
-
-                var px = (x << 2) + blockX;
-                var py = (y << 2) + blockY;
-                if (px < width && py < height)
+            if (c0 > c1)
+                switch (index)
                 {
-                    var offset = (py * width + px) << 2;
-                    imageData[offset] = b;
-                    imageData[offset + 1] = g;
-                    imageData[offset + 2] = r;
-                    imageData[offset + 3] = a;
+                    case 0:
+                        r = r0;
+                        g = g0;
+                        b = b0;
+                        break;
+                    case 1:
+                        r = r1;
+                        g = g1;
+                        b = b1;
+                        break;
+                    case 2:
+                        r = (byte)((2 * r0 + r1) / 3);
+                        g = (byte)((2 * g0 + g1) / 3);
+                        b = (byte)((2 * b0 + b1) / 3);
+                        break;
+                    case 3:
+                        r = (byte)((r0 + 2 * r1) / 3);
+                        g = (byte)((g0 + 2 * g1) / 3);
+                        b = (byte)((b0 + 2 * b1) / 3);
+                        break;
                 }
+            else
+                switch (index)
+                {
+                    case 0:
+                        r = r0;
+                        g = g0;
+                        b = b0;
+                        break;
+                    case 1:
+                        r = r1;
+                        g = g1;
+                        b = b1;
+                        break;
+                    case 2:
+                        r = (byte)((r0 + r1) / 2);
+                        g = (byte)((g0 + g1) / 2);
+                        b = (byte)((b0 + b1) / 2);
+                        break;
+                    case 3:
+                        r = 0;
+                        g = 0;
+                        b = 0;
+                        a = 0;
+                        break;
+                }
+
+            var px = (x << 2) + blockX;
+            var py = (y << 2) + blockY;
+            if (px < width && py < height)
+            {
+                var offset = (py * width + px) << 2;
+                imageData[offset] = b;
+                imageData[offset + 1] = g;
+                imageData[offset + 2] = r;
+                imageData[offset + 3] = a;
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using System.Text;
 using Atf;
+using Org.OpenOrbit.Libraries.JpegXr;
 
 namespace Org.OpenOrbit.Libraries.Atf;
 
@@ -25,12 +26,13 @@ public enum AtfFormat
 public class AtfReader
 {
     private readonly AtfFormat _atfFormat;
-    private bool _cubemap;
     private readonly int _height;
-    private int _mipCount;
     private readonly int _version;
 
     private readonly int _width;
+    private bool _cubemap;
+
+    private int _mipCount;
     //  public Bitmap Bitmap = new Bitmap(1, 1);
 
     public AtfReader(Stream data)
@@ -103,16 +105,17 @@ public class AtfReader
                     break;
                 case AtfFormat.ATFCOMPRESSED:
                     // var dxt1DataLen = BitConverter.ToUInt32(reader.ReadBytes(4).Reverse().ToArray(), 0);
-                    
+
                     var dxt1Data = reader.ReadBytes((int)length);
                     dxt1Data = CompressionUtil.DecompressLzma(dxt1Data);
-                    
+
                     var dxt1ImageDataLength = reader.ReadUInt32Be();
                     var dxt1ImageData = reader.ReadBytes((int)dxt1ImageDataLength);
+
+                    JpegXrDecoder.Decode(new MemoryStream(dxt1ImageData));
+
+                    image = DxtUtil.DecompressDxt1Sep(dxt1Data, dxt1ImageData, _width, _height);
                     
-                    
-                    
-                    image = DxtUtil.DecompressDxt1Sep(dxt1Data, dxt1ImageData, _width, _height);;
                     break;
                 default:
                     throw new Exception("Only ATF without lzma or jpeg compression supported now. Format " +
@@ -126,6 +129,4 @@ public class AtfReader
             // Bitmap.UnlockBits(pixels);
         }
     }
-
-
 }

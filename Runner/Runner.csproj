@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\atf-lib\atf-lib.csproj" />
+        <ProjectReference Include="..\atf-lib\atf-lib.csproj"/>
     </ItemGroup>
 
 </Project>
